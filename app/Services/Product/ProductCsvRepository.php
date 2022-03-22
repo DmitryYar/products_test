@@ -14,7 +14,6 @@ class ProductCsvRepository implements ProductRepositoryInterface
         $this->csvReader = new CsvReader();
         $r = require_once "config/config.php";
         $this->productsFile = $r['products']['file_path'];
-        //$this->productsFile = require_once "config/config.php"['products']['file_path'];
     }
 
     public function getProducts()

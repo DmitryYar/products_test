@@ -13,7 +13,7 @@ class Controller
         $loader = new \Twig\Loader\FilesystemLoader('resources/templates');
         $this->twig = new \Twig\Environment($loader, [
             //'cache' => '/storage/cache/twig',
-            'debug' => true,
+            'debug' => false,
         ]);
     }
 }
