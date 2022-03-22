@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %} Products {% endblock %}
+{% block content %}
+    <div class="container" style="">
+    <h1>Товары</h1>
+    <div class="filter">
+        <form action="/index.php">
+            <div class="row mw-100">
+                <label for="price_more">Цена от: </label>
+                <input type="text" name="price_more" value="{{ filter.priceMore }}"/>
+            </div>
+            <div class="row mt-2">
+                <label for="price_less">Цена до: </label>
+                <input type="text" name="price_less" value="{{ filter.priceLess }}"/>
+            </div>
+            <div class="row mt-2">
+                <label for="title_search">Поиск: </label>
+                <input type="text" name="title_search" id="title_search" value="{{ filter.titleSearch }}"/>
+            </div>
+            <div class="row mt-2">
+                <label for="order_by">Сортировать: </label>
+                <select name="order_by" id="order_by">
+                    <option value="" {% if filter.orderBy is null %} selected {% endif %}>Без сортировки</option>
+                    <option value="order_by_price_asc" {% if filter.orderBy == "order_by_price_asc" %} selected {% endif %}>По цене, сначала дешевле</option>
+                    <option value="order_by_price_desc" {% if filter.orderBy == 'order_by_price_desc' %} selected {% endif %}>По цене, сначала дороже</option>
+                    <option value="order_by_discount_asc" {% if filter.orderBy == 'order_by_discount_asc' %} selected {% endif %}>По скидке, сначала меньше</option>
+                    <option value="order_by_discount_desc" {% if filter.orderBy == 'order_by_discount_desc' %} selected {% endif %}>По скидке, сначала больше</option>
+                </select>
+            </div>
+            <div class="row mt-2">
+                <button type="submit" class="mr-2">Фильтровать</button>
+                <button type="submit" id="btn-clear-filter">Сбросить</button>
+            </div>
+        </form>
+    </div>
+    <div class="products">
+        <table>
+            <thead>
+            <tr>
+                <td>#id</td>
+                <td>Название</td>
+                <td>Цвет</td>
+                <td>Ширина</td>
+                <td>Высота</td>
+                <td>Глубина</td>
+                <td>Кол-во</td>
+                <td>Цена</td>
+                <td>Скидка</td>
+            </tr>
+            </thead>
+            {% for product in products %}
+                <tr>
+                    <td>{{product.id}}</td>
+                    <td>{{product.title}}</td>
+                    <td>{{product.color}}</td>
+                    <td>{{product.width}}</td>
+                    <td>{{product.height}}</td>
+                    <td>{{product.depth}}</td>
+                    <td>{{product.qty}}</td>
+                    <td>{{product.price}}</td>
+                    <td>{{product.discount}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="paginator">
+        {% if paginator %}
+            <ul>
+                {% for link in paginator %}
+                    <li><a href="{{ link['link'] }}" class="{% if link['isActive'] %} disabled {% endif %}">{{ link['number'] }}</a></li>    
+                {% endfor %}
+            </ul>
+        {% endif%}
+    </div>
+    <div class="statistic" style="word-wrap: break-word; max-width: 768px;">
+        <div>
+            <span>Кол-во: {{ statistics.qty}}</span>
+            <span>Сумма цен: {{ statistics.totalPrice|number_format(0, '.', ' ') }}</span>
+        </div>
+        <div>
+            <span>Сумма скидок: {{statistics.totalDiscount|number_format(0, '.', ' ') }}</span>
+        </div>
+        <div>
+            <span>Итого сумма: {{statistics.totalAmount|number_format(0, '.', ' ') }}</span>
+            <span>Итого скидки: {{statistics.amountDiscount|number_format(0, '.', ' ') }}</span>
+        </div>
+        <div>
+            <span>Итого сумма товаров со скидками: {{statistics.totalAmountWithDiscount|number_format(0, '.', ' ') }}</span>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    let btnClearFilter = document.getElementById('btn-clear-filter')
+    btnClearFilter.addEventListener('click', function(e) {
+        e.preventDefault();
+        location.replace('/index.php');
+    })
+});
+</script>
+{% endblock %}
